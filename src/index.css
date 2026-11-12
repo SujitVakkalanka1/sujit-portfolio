@@ -261,14 +261,6 @@ img {
   color: var(--accent-lime);
 }
 
-.dock-label-full {
-  display: inline;
-}
-
-.dock-label-mobile {
-  display: none;
-}
-
 .dock-separator {
   width: 1px;
   height: 16px;
@@ -2643,14 +2635,6 @@ img {
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     box-shadow: 0 10px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.5);
-  }
-
-  .dock-label-full {
-    display: none;
-  }
-
-  .dock-label-mobile {
-    display: inline;
   }
 
   .dock-link {

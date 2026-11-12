@@ -6,11 +6,11 @@ export default function Header({ theme = 'dark', onToggleTheme }) {
   const [activeSection, setActiveSection] = useState('');
 
   const navItems = [
-    { id: 'spotlight', label: '[ ABOUT ]', mobileLabel: 'ABOUT' },
-    { id: 'projects', label: '[ PROJECTS ]', mobileLabel: 'PROJECTS' },
-    { id: 'learning', label: '[ LEARNING ]', mobileLabel: 'TRACKS' },
-    { id: 'toolbelt', label: '[ TOOLBELT ]', mobileLabel: 'SKILLS' },
-    { id: 'contact', label: '[ CONTACT ]', mobileLabel: 'CONTACT' }
+    { id: 'spotlight', label: '[ ABOUT ]' },
+    { id: 'projects', label: '[ PROJECTS ]' },
+    { id: 'learning', label: '[ LEARNING ]' },
+    { id: 'toolbelt', label: '[ TOOLBELT ]' },
+    { id: 'contact', label: '[ CONTACT ]' }
   ];
 
   const handleNavClick = (e, targetId) => {
@@ -123,10 +123,8 @@ export default function Header({ theme = 'dark', onToggleTheme }) {
               href={`#${item.id}`}
               onClick={(e) => handleNavClick(e, item.id)}
               className={`dock-link ${activeSection === item.id ? 'active' : ''}`}
-              aria-label={item.mobileLabel}
             >
-              <span className="char-shift dock-label-full">{item.label}</span>
-              <span className="char-shift dock-label-mobile">{item.mobileLabel}</span>
+              <span className="char-shift">{item.label}</span>
             </a>
           ))}
 
