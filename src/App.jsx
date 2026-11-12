@@ -20,7 +20,7 @@ import Toast from './components/Toast.jsx';
 gsap.registerPlugin(ScrollTrigger);
 
 export default function App() {
-  const [modalState, setModalState] = useState({ isOpen: false, mode: 'project', projectId: 'clauseguard' });
+  const [modalState, setModalState] = useState({ isOpen: false, mode: 'project', itemId: 'clauseguard' });
   const [toasts, setToasts] = useState([]);
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('portfolio-theme') || 'dark';
@@ -44,11 +44,15 @@ export default function App() {
     const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (isReducedMotion) return;
 
+    // On mobile touchscreens, keep touch native and snappy
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: isTouchDevice ? 0.9 : 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      syncTouch: false
+      syncTouch: false,
+      touchMultiplier: 1.0
     });
 
     window.lenis = lenis;
@@ -76,11 +80,15 @@ export default function App() {
   };
 
   const handleOpenProject = (projectId) => {
-    setModalState({ isOpen: true, mode: 'project', projectId });
+    setModalState({ isOpen: true, mode: 'project', itemId: projectId });
+  };
+
+  const handleOpenTrack = (trackId) => {
+    setModalState({ isOpen: true, mode: 'track', itemId: trackId });
   };
 
   const handleOpenResume = () => {
-    setModalState({ isOpen: true, mode: 'resume', projectId: null });
+    setModalState({ isOpen: true, mode: 'resume', itemId: null });
   };
 
   const handleCloseModal = () => {
@@ -98,7 +106,7 @@ export default function App() {
         <ProjectsGrid onOpenProject={handleOpenProject} />
         <Manifesto />
         <Marquee />
-        <LearningTracks />
+        <LearningTracks onOpenTrack={handleOpenTrack} />
         <Toolbelt />
         <JournalAccordion onOpenProject={handleOpenProject} />
         <ContactFooter onShowToast={handleShowToast} />
@@ -107,7 +115,7 @@ export default function App() {
       <ProjectModal
         isOpen={modalState.isOpen}
         mode={modalState.mode}
-        projectId={modalState.projectId}
+        itemId={modalState.itemId}
         onClose={handleCloseModal}
       />
 

@@ -146,10 +146,16 @@ export default function LearningTracks({ onOpenTrack }) {
             <div
               className="service-row"
               data-track-id="fullstack"
+              role="button"
+              tabIndex={0}
               onClick={() => onOpenTrack && onOpenTrack('fullstack')}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpenTrack && onOpenTrack('fullstack'); } }}
             >
               <span className="service-index">01</span>
-              <h3 className="service-name">Full-Stack Development</h3>
+              <div className="service-header-wrap">
+                <h3 className="service-name">Full-Stack Development</h3>
+                <span className="service-mobile-cta">View Curriculum ↗</span>
+              </div>
               <p className="service-desc-snippet">Building complete web applications — frontend interactivity, backend logic, and the data layer that ties them together.</p>
               <span className="service-tag">WEB DEV TRACK</span>
             </div>
@@ -157,10 +163,16 @@ export default function LearningTracks({ onOpenTrack }) {
             <div
               className="service-row"
               data-track-id="python"
+              role="button"
+              tabIndex={0}
               onClick={() => onOpenTrack && onOpenTrack('python')}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpenTrack && onOpenTrack('python'); } }}
             >
               <span className="service-index">02</span>
-              <h3 className="service-name">Python</h3>
+              <div className="service-header-wrap">
+                <h3 className="service-name">Python</h3>
+                <span className="service-mobile-cta">View Curriculum ↗</span>
+              </div>
               <p className="service-desc-snippet">Using Python as the language for automation, scripting, and the early groundwork for machine learning.</p>
               <span className="service-tag">LANGUAGE TRACK</span>
             </div>
@@ -168,10 +180,16 @@ export default function LearningTracks({ onOpenTrack }) {
             <div
               className="service-row"
               data-track-id="ml"
+              role="button"
+              tabIndex={0}
               onClick={() => onOpenTrack && onOpenTrack('ml')}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpenTrack && onOpenTrack('ml'); } }}
             >
               <span className="service-index">03</span>
-              <h3 className="service-name">Machine Learning</h3>
+              <div className="service-header-wrap">
+                <h3 className="service-name">Machine Learning</h3>
+                <span className="service-mobile-cta">View Curriculum ↗</span>
+              </div>
               <p className="service-desc-snippet">Starting from the fundamentals — the math and logic behind the models, before reaching for shortcuts.</p>
               <span className="service-tag">EARLY STAGE</span>
             </div>

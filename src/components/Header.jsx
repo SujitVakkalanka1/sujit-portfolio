@@ -6,12 +6,24 @@ export default function Header({ theme = 'dark', onToggleTheme }) {
   const [activeSection, setActiveSection] = useState('');
 
   const navItems = [
-    { id: 'spotlight', label: '[ ABOUT ]' },
-    { id: 'projects', label: '[ PROJECTS ]' },
-    { id: 'learning', label: '[ LEARNING ]' },
-    { id: 'toolbelt', label: '[ TOOLBELT ]' },
-    { id: 'contact', label: '[ CONTACT ]' }
+    { id: 'spotlight', label: '[ ABOUT ]', mobileLabel: 'ABOUT' },
+    { id: 'projects', label: '[ PROJECTS ]', mobileLabel: 'PROJECTS' },
+    { id: 'learning', label: '[ LEARNING ]', mobileLabel: 'TRACKS' },
+    { id: 'toolbelt', label: '[ TOOLBELT ]', mobileLabel: 'SKILLS' },
+    { id: 'contact', label: '[ CONTACT ]', mobileLabel: 'CONTACT' }
   ];
+
+  const handleNavClick = (e, targetId) => {
+    e.preventDefault();
+    const el = document.getElementById(targetId);
+    if (!el) return;
+    if (window.lenis) {
+      window.lenis.scrollTo(el, { offset: -70 });
+    } else {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+    setActiveSection(targetId);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -83,7 +95,12 @@ export default function Header({ theme = 'dark', onToggleTheme }) {
         <div className="scroll-progress-bar" style={{ width: `${scrollProgress}%` }}></div>
         <div className="container header-inner">
           <div className="nav-brand-slot" id="nav-brand-slot">
-            <a href="#hero" className="nav-brand-target" id="nav-brand-target">
+            <a
+              href="#hero"
+              className="nav-brand-target"
+              id="nav-brand-target"
+              onClick={(e) => handleNavClick(e, 'hero')}
+            >
               SUJIT VAKKALANKA
             </a>
           </div>
@@ -91,7 +108,7 @@ export default function Header({ theme = 'dark', onToggleTheme }) {
           <div className="header-status">
             <div className="live-clock-badge" title="Asia/Kolkata (IST)">
               <span className="pulse-dot"></span>
-              <span>{timeString}</span>
+              <span className="clock-time-text">{timeString}</span>
             </div>
           </div>
         </div>
@@ -104,9 +121,12 @@ export default function Header({ theme = 'dark', onToggleTheme }) {
             <a
               key={item.id}
               href={`#${item.id}`}
+              onClick={(e) => handleNavClick(e, item.id)}
               className={`dock-link ${activeSection === item.id ? 'active' : ''}`}
+              aria-label={item.mobileLabel}
             >
-              <span className="char-shift">{item.label}</span>
+              <span className="char-shift dock-label-full">{item.label}</span>
+              <span className="char-shift dock-label-mobile">{item.mobileLabel}</span>
             </a>
           ))}
 

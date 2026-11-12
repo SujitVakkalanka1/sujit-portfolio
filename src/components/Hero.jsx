@@ -34,7 +34,10 @@ export default function Hero({ onOpenResume }) {
       const docLeft = cRect.left + (window.scrollX || 0);
       const targetTop = sRect.top;
       const targetLeft = sRect.left;
-      const scaleRatio = Math.min(0.55, Math.max(0.18, (sRect.height || 24) / (cRect.height || 65)));
+      const isMobile = window.innerWidth < 768;
+      const scaleRatio = isMobile
+        ? Math.min(0.65, Math.max(0.25, (sRect.height || 22) / (cRect.height || 50)))
+        : Math.min(0.55, Math.max(0.18, (sRect.height || 24) / (cRect.height || 65)));
 
       measurements = {
         docTop,
@@ -44,7 +47,7 @@ export default function Hero({ onOpenResume }) {
         deltaX: targetLeft - docLeft,
         deltaY: targetTop - docTop,
         scaleRatio,
-        S: Math.min(320, Math.max(200, docTop - targetTop))
+        S: Math.min(320, Math.max(180, docTop - targetTop))
       };
     };
 
@@ -117,56 +120,76 @@ export default function Hero({ onOpenResume }) {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    const isMobile = window.innerWidth < 768;
+
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
     camera.position.z = 10;
 
-    const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    const renderer = new THREE.WebGLRenderer({
+      canvas: canvas,
+      alpha: true,
+      antialias: !isMobile,
+      powerPreference: 'low-power'
+    });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
     renderer.setSize(canvas.clientWidth, canvas.clientHeight);
 
     // Dynamic procedural mossy botanical landscape texture
     const texCanvas = document.createElement('canvas');
-    texCanvas.width = 1024;
-    texCanvas.height = 768;
+    texCanvas.width = isMobile ? 512 : 1024;
+    texCanvas.height = isMobile ? 384 : 768;
     const ctx = texCanvas.getContext('2d');
 
     // Deep architectural obsidian base
     ctx.fillStyle = '#080A07';
-    ctx.fillRect(0, 0, 1024, 768);
+    ctx.fillRect(0, 0, texCanvas.width, texCanvas.height);
 
     // Rich botanical moss gradients
-    const grad1 = ctx.createRadialGradient(260, 480, 20, 260, 480, 420);
+    const grad1 = ctx.createRadialGradient(
+      texCanvas.width * 0.25, texCanvas.height * 0.6, 15,
+      texCanvas.width * 0.25, texCanvas.height * 0.6, texCanvas.width * 0.4
+    );
     grad1.addColorStop(0, '#3B5824');
     grad1.addColorStop(0.5, '#1B2E10');
     grad1.addColorStop(1, 'transparent');
     ctx.fillStyle = grad1;
-    ctx.fillRect(0, 0, 1024, 768);
+    ctx.fillRect(0, 0, texCanvas.width, texCanvas.height);
 
-    const grad2 = ctx.createRadialGradient(820, 280, 30, 820, 280, 460);
+    const grad2 = ctx.createRadialGradient(
+      texCanvas.width * 0.8, texCanvas.height * 0.35, 20,
+      texCanvas.width * 0.8, texCanvas.height * 0.35, texCanvas.width * 0.45
+    );
     grad2.addColorStop(0, '#4A5D23');
     grad2.addColorStop(0.6, '#15240D');
     grad2.addColorStop(1, 'transparent');
     ctx.fillStyle = grad2;
-    ctx.fillRect(0, 0, 1024, 768);
+    ctx.fillRect(0, 0, texCanvas.width, texCanvas.height);
 
     // Architectural topographic elevation contours
     ctx.strokeStyle = '#273C1A';
     ctx.lineWidth = 1.5;
-    for (let i = 0; i < 9; i++) {
+    for (let i = 0; i < (isMobile ? 5 : 9); i++) {
       ctx.beginPath();
-      ctx.ellipse(512, 384, 160 + i * 55, 100 + i * 40, 0.22, 0, Math.PI * 2);
+      ctx.ellipse(
+        texCanvas.width * 0.5,
+        texCanvas.height * 0.5,
+        (texCanvas.width * 0.15) + i * (isMobile ? 30 : 55),
+        (texCanvas.height * 0.15) + i * (isMobile ? 22 : 40),
+        0.22, 0, Math.PI * 2
+      );
       ctx.stroke();
     }
 
     // Precision coordinate grid
     ctx.strokeStyle = 'rgba(206, 241, 82, 0.07)';
     ctx.lineWidth = 1;
-    for (let x = 0; x < 1024; x += 48) {
-      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 768); ctx.stroke();
+    const step = isMobile ? 64 : 48;
+    for (let x = 0; x < texCanvas.width; x += step) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, texCanvas.height); ctx.stroke();
     }
-    for (let y = 0; y < 768; y += 48) {
-      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(1024, y); ctx.stroke();
+    for (let y = 0; y < texCanvas.height; y += step) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(texCanvas.width, y); ctx.stroke();
     }
 
     const mosaicTexture = new THREE.CanvasTexture(texCanvas);

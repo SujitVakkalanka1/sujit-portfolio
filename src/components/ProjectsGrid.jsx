@@ -98,6 +98,9 @@ function ProjectShaderCanvas({ imgSrc }) {
     let lastX = 0, lastY = 0;
     let isHovered = false;
 
+    // Only hook mouse events on devices with hover/mouse pointer
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
     const handleMouseEnter = (e) => {
       isHovered = true;
       lastX = e.clientX;
@@ -125,13 +128,11 @@ function ProjectShaderCanvas({ imgSrc }) {
       gsap.to(uniforms.uHover, { value: 0.0, duration: 0.45, ease: 'power2.out' });
     };
 
-    container.addEventListener('mouseenter', handleMouseEnter);
-    container.addEventListener('mousemove', handleMouseMove);
-    container.addEventListener('mouseleave', handleMouseLeave);
-    container.addEventListener('pointerdown', handleMouseEnter);
-    container.addEventListener('pointermove', handleMouseMove);
-    container.addEventListener('pointerup', handleMouseLeave);
-    container.addEventListener('pointercancel', handleMouseLeave);
+    if (!isTouchDevice) {
+      container.addEventListener('mouseenter', handleMouseEnter);
+      container.addEventListener('mousemove', handleMouseMove);
+      container.addEventListener('mouseleave', handleMouseLeave);
+    }
 
     let animId = null;
     const renderLoop = (time) => {
@@ -149,20 +150,18 @@ function ProjectShaderCanvas({ imgSrc }) {
 
     return () => {
       if (animId) cancelAnimationFrame(animId);
-      container.removeEventListener('mouseenter', handleMouseEnter);
-      container.removeEventListener('mousemove', handleMouseMove);
-      container.removeEventListener('mouseleave', handleMouseLeave);
-      container.removeEventListener('pointerdown', handleMouseEnter);
-      container.removeEventListener('pointermove', handleMouseMove);
-      container.removeEventListener('pointerup', handleMouseLeave);
-      container.removeEventListener('pointercancel', handleMouseLeave);
+      if (!isTouchDevice) {
+        container.removeEventListener('mouseenter', handleMouseEnter);
+        container.removeEventListener('mousemove', handleMouseMove);
+        container.removeEventListener('mouseleave', handleMouseLeave);
+      }
       window.removeEventListener('resize', handleResize);
       renderer.dispose();
       texture.dispose();
     };
   }, [imgSrc]);
 
-  return <canvas ref={canvasRef} className="project-webgl-canvas" />;
+  return <canvas ref={canvasRef} className="project-webgl-canvas" style={{ touchAction: 'pan-y' }} />;
 }
 
 export default function ProjectsGrid({ onOpenProject }) {

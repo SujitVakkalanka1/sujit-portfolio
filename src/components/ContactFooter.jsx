@@ -106,13 +106,17 @@ export default function ContactFooter({ onShowToast }) {
 
             <div className="contact-direct-links">
               <button type="button" className="contact-chip-link" onClick={handleCopyEmail}>
-                <span>✉</span> vsbsujit883@gmail.com [Copy to Clipboard]
+                <span className="chip-icon">✉</span>
+                <span className="chip-email-text">vsbsujit883@gmail.com</span>
+                <span className="chip-action-pill">COPY</span>
               </button>
               <a href="https://github.com/SujitVakkalanka1" target="_blank" rel="noopener noreferrer" className="contact-chip-link">
-                <span>⚙</span> github.com/SujitVakkalanka1 ↗
+                <span className="chip-icon">⚙</span>
+                <span>github.com/SujitVakkalanka1 ↗</span>
               </a>
               <a href="https://www.linkedin.com/in/sujit-vakkalanka-862878383/" target="_blank" rel="noopener noreferrer" className="contact-chip-link">
-                <span>⚡</span> linkedin.com/in/sujit-vakkalanka ↗
+                <span className="chip-icon">⚡</span>
+                <span>linkedin.com/in/sujit-vakkalanka ↗</span>
               </a>
             </div>
           </div>
@@ -140,6 +144,8 @@ export default function ContactFooter({ onShowToast }) {
                     className="form-input"
                     placeholder="e.g. Alex Morgan"
                     maxLength={80}
+                    autoComplete="name"
+                    inputMode="text"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     required
@@ -154,6 +160,10 @@ export default function ContactFooter({ onShowToast }) {
                     className="form-input"
                     placeholder="alex@company.com"
                     maxLength={120}
+                    autoComplete="email"
+                    inputMode="email"
+                    autoCapitalize="none"
+                    autoCorrect="off"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     required
@@ -167,6 +177,7 @@ export default function ContactFooter({ onShowToast }) {
                     className="form-textarea"
                     placeholder="Hello Sujit, we would like to discuss..."
                     maxLength={3000}
+                    autoComplete="off"
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     required

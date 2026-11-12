@@ -51,7 +51,10 @@ export default function JournalAccordion({ onOpenProject }) {
             <div
               key={idx}
               className={`accordion-panel ${p.bgClass}`}
+              role="button"
+              tabIndex={0}
               onClick={() => onOpenProject(p.projectId)}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpenProject(p.projectId); } }}
             >
               <div className="accordion-overlay">
                 <div className="accordion-header-block">
